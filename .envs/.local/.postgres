@@ -1,0 +1,8 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=173.28.1.12
+POSTGRES_PORT=5432
+POSTGRES_DB=file_store
+POSTGRES_USER=file_store
+POSTGRES_PASSWORD=password
+
