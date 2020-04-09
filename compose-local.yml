@@ -1,0 +1,44 @@
+version: '3'
+
+volumes:
+  local_postgres_vol: {}
+  local_filestorage_vol: {}
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/local/postgres/Dockerfile
+    image: file_store_postgresql
+    volumes:
+      - local_postgres_vol:/var/lib/postgresql/file_store-docker/data
+    env_file:
+      - ./.envs/.local/.postgres
+    networks:
+        file_store_docker_net:
+            ipv4_address: 173.28.1.12
+
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: file_store_django_local
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+      - local_filestorage_vol:/tmp/file_store
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    command: /start.sh
+    ports:
+      - "8112:80"
+    networks:
+        file_store_docker_net:
+            ipv4_address: 173.28.1.14
+
+networks:
+    file_store_docker_net:
+      external:
+        name: file_store_docker_net
